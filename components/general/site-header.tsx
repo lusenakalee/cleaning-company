@@ -5,6 +5,7 @@ import { ChevronDown, Leaf, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -176,41 +177,31 @@ const roles = [
 ];
 
 function RoleSwitcher() {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="relative">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setOpen(!open)}
-        className="text-xs gap-1"
-      >
-        Dashboards
-        <ChevronDown className="w-3 h-3" />
-      </Button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.12 }}
-            className="absolute right-0 top-full mt-1 w-40 bg-card border border-border rounded-lg shadow-lg p-1 z-50"
-          >
-            {roles.map((role) => (
-              <Link
-                key={role.href}
-                href={role.href}
-                className="block px-3 py-2 text-sm text-foreground/80 hover:text-primary hover:bg-accent rounded-md transition-colors"
-                onClick={() => setOpen(false)}
-              >
-                {role.label} Dashboard
-              </Link>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="text-xs gap-1"
+        >
+          Dashboards
+          <ChevronDown className="w-3 h-3" />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="w-44">
+        {roles.map((role) => (
+          <DropdownMenuItem key={role.href} asChild>
+            <Link
+              href={role.href}
+              className="cursor-pointer"
+            >
+              {role.label} Dashboard
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
